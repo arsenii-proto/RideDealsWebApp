@@ -19,7 +19,7 @@ export default {
 
     })
 
-    this.$OS.trigger('test.event', {})
+    // this.$OS.trigger('test.event', {})
 
     return {
       msg: "Puiutu te iubesc - Hai Sate ajut",

@@ -1,50 +1,40 @@
 import env from "../env"; 
 
-var OS              = window[ env.moduleName ] || (() => { });
-var listenners      = {};
-var callCmd         = (c, d) => OS.run(c, makeArgs(d).substr(2))
-var triggerEvent    = (e, d) => OS.dispatch(e, makeArgs(d).substr(2))
+var OS = {
 
-var onEvent         = (e, l) => {
+    target:     window[env.moduleName] || (() => { }),
+    listenners: {},
+    call:       (c, d) => this.target.run(c, this.args(d).substr(2)),
+    trigger:    (e, d) => this.target.dispatch(e, this.args(d).substr(2)),
+    on:         (e, l) => ( ( !this.listenners[ e ] && ( this.listenners[ e ] = [] ) ), ( this.listenners[ e ].push( l ) ) ),
+    off:        (e, l) => this.listenners[ e ] && this.listenners[ e ].forEach( (c, i) => c == l && ( delete this.listenners[ e ][ i ] ) ),
+    args:       (d, k) => {
 
-    !listenners[ e ] && ( listenners[ e ] = [] )
-    listenners[ e ].push( l )
+                    var data = "";
+
+                    if( typeof d === "object" ) {
+                        
+                        k && (data += `&&${k}:${(d instanceof Array ? 'array' : 'object')}`)
+
+                        for ( var sk in d ) {
+
+                            if ( d.hasOwnProperty(sk) ) {
+                                
+                                var key = (k ? `${k}.` : '') + `${(d instanceof Array ? '_' : '')}${sk}`
+                                data += this.args(d[sk], key)
+                            }
+                        }
+
+                    }else{
+                        
+                        data += `&&${k}:${typeof d}=${d}`
+                    }
+
+                    return data
+                }
 }
 
-var offEvent        = (e, l) => {
-
-    listenners[ e ] && listenners[ e ].forEach( (c, i) => c == l && ( delete listenners[ e ][ i ] ) )
-}
-
-var makeArgs        = (d, k) => {
-
-    var data = "";
-
-    if( typeof d === "object" ) {
-        
-        k && (data += `&&${k}:${(d instanceof Array ? 'array' : 'object')}`)
-
-        for ( var sk in d ) {
-
-            if ( d.hasOwnProperty(sk) ) {
-                
-                var key = (k ? `${k}.` : '') + `${(d instanceof Array ? '_' : '')}${sk}`
-                data += makeArgs(d[sk], key)
-            }
-        }
-
-    }else{
-        
-        data += `&&${k}:${typeof d}=${d}`
-    }
-
-    return data
-}
-
-window[ env.moduleName ].receive = (e, d) => {
-
-    listenners[ e ] && listenners[ e ].forEach( l => l( e, JSON.parse( d )  ) )
-}
+OS.target.receive = (e, d) => this.listenners[e] && this.listenners[e].forEach(l => l(e, JSON.parse(d)))
 
 export default {
 
@@ -53,14 +43,13 @@ export default {
         if ( OS ) {
 
             var OSC = {
-                trigger:    (e, d) => triggerEvent(e, d),
-                on:         (e, l) => onEvent(e, l),
-                off:        (e, l) => offEvent(e, l),
-                loaded: OS.commandsList ? !0 : !1,
-                cmds: []
+                trigger:    (e, d) => OS.trigger(e, d),
+                on:         (e, l) => OS.on(e, l),
+                off:        (e, l) => OS.off(e, l),
+                loaded:     OS.target.commandsList ? !0 : !1,
             }
             
-            OS.commandsList && JSON.parse( OS.commandsList() ).forEach(cmd => {
+            OS.target.commandsList && JSON.parse( OS.target.commandsList() ).forEach(cmd => {
 
                 if(! cmd ) return
                 
@@ -74,7 +63,7 @@ export default {
 
                     if(! lastMod[ space ] ){
                         
-                        lastMod[ space ] = d => callCmd( currentSpace , d )
+                        lastMod[ space ] = d => this.call( currentSpace , d )
                     }
 
                     lastSpace   = currentSpace
