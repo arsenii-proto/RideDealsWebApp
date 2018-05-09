@@ -9,20 +9,18 @@ export default {
   name: 'Home',
   data() {
 
-    this.$OS && this.$OS.toast && this.$OS.toast.show({ text: "Puiutu te iubesc" }) 
+    this.$OS && this.$OS.toast && this.$OS.toast.show({ text: "v1" }) ;
 
-    this.$OS.on('test.event', (e, data) => {  
+    this.$OS.on('test.event', () => {  
       
-      this.$OS && this.$OS.toast && this.$OS.toast.show({ text: "Receive test.event" })
-
-      data.alert = 12
+      this.$OS && this.$OS.toast && this.$OS.toast.show({ text: "v2" })
 
     })
 
-    // this.$OS.trigger('test.event', {})
+    this.$OS.trigger('test.event', {})
 
     return {
-      msg: "Puiutu te iubesc - Hai Sate ajut",
+      msg: "Start",
     }
   }
 }

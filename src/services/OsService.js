@@ -4,10 +4,10 @@ var OS = {
 
     target:     window[env.moduleName] || (() => { }),
     listenners: {},
-    call:       (c, d) => this.target.run(c, this.args(d).substr(2)),
-    trigger:    (e, d) => this.target.dispatch(e, this.args(d).substr(2)),
-    on:         (e, l) => ( ( !this.listenners[ e ] && ( this.listenners[ e ] = [] ) ), ( this.listenners[ e ].push( l ) ) ),
-    off:        (e, l) => this.listenners[ e ] && this.listenners[ e ].forEach( (c, i) => c == l && ( delete this.listenners[ e ][ i ] ) ),
+    call:       (c, d) => OS.target.run(c, OS.args(d).substr(2)),
+    trigger:    (e, d) => OS.target.dispatch && OS.target.dispatch(e, OS.args(d).substr(2)),
+    off:        (e, l) => OS.listenners[ e ] && OS.listenners[ e ].forEach( (c, i) => c == l && ( delete OS.listenners[ e ][ i ] ) ),
+    on:         (e, l) => ( ( !OS.listenners[ e ] && ( OS.listenners[ e ] = [] ) ), ( OS.listenners[ e ].push( l ) ) ),
     args:       (d, k) => {
 
                     var data = "";
@@ -21,7 +21,7 @@ var OS = {
                             if ( d.hasOwnProperty(sk) ) {
                                 
                                 var key = (k ? `${k}.` : '') + `${(d instanceof Array ? '_' : '')}${sk}`
-                                data += this.args(d[sk], key)
+                                data += OS.args(d[sk], key)
                             }
                         }
 
@@ -34,7 +34,7 @@ var OS = {
                 }
 }
 
-OS.target.receive = (e, d) => this.listenners[e] && this.listenners[e].forEach(l => l(e, JSON.parse(d)))
+OS.target.receive = (e, d) => OS.listenners[e] && OS.listenners[e].forEach(l => l(e, JSON.parse(d)))
 
 export default {
 
@@ -63,7 +63,7 @@ export default {
 
                     if(! lastMod[ space ] ){
                         
-                        lastMod[ space ] = d => this.call( currentSpace , d )
+                        lastMod[ space ] = d => OS.call( currentSpace , d )
                     }
 
                     lastSpace   = currentSpace
