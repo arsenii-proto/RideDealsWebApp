@@ -1,10 +1,11 @@
-import env from "../env"; 
+import env from "../env";
+import { FakeOsService } from "../fakeOsService/FakeOsService"; // eslint-disable-line
 
 var OS = {
 
     target:     window[env.moduleName] || (() => { }),
     listenners: {},
-    call:       (c, d) => OS.target.run(c, OS.args(d).substr(2)),
+    call:       (c, d) => JSON.parse( ( OS.target.run(c, OS.args(d).substr(2)) || "{}") ),
     trigger:    (e, d) => OS.target.dispatch && OS.target.dispatch(e, OS.args(d).substr(2)),
     off:        (e, l) => OS.listenners[ e ] && OS.listenners[ e ].forEach( (c, i) => c == l && ( delete OS.listenners[ e ][ i ] ) ),
     on:         (e, l) => ( ( !OS.listenners[ e ] && ( OS.listenners[ e ] = [] ) ), ( OS.listenners[ e ].push( l ) ) ),

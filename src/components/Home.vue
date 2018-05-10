@@ -1,7 +1,19 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-  </div>
+
+  <transition name="words-up">
+
+    <span id="root">
+
+      <span id="dot"></span>
+      <span id="word-r" class="words">R</span>
+      <span id="word-i" class="words">I</span>
+      <span id="word-d" class="words">D</span>
+      <span id="word-e" class="words">E</span>
+      
+    </span>
+
+  </transition>
+
 </template>
 
 <script>
@@ -9,38 +21,74 @@ export default {
   name: 'Home',
   data() {
 
-    this.$OS && this.$OS.toast && this.$OS.toast.show({ text: "v1" }) ;
-
-    this.$OS.on('test.event', () => {  
-      
-      this.$OS && this.$OS.toast && this.$OS.toast.show({ text: "v2" })
-
-    })
-
-    this.$OS.trigger('test.event', {})
-
     return {
-      msg: "Start",
+      notFinised: true
     }
+  },
+  created: function() {    
+    
+    setTimeout(() => {
+      
+      this.$router.push({ name: 'about' });
+
+    }, 4000)
   }
 }
 </script>
-`
+
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+
+span.words {
+  font-family: 'Magra', sans-serif;
+  font-size: 50px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+span#root {
+  text-align: center;
+  display: block;
+  padding: 180px 0 0 0;
+  -webkit-animation-name: flash;
+  animation-name: flash;
+  -webkit-animation-duration: 7s;
+  animation-duration: 7s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
 }
-li {
+
+span#root.words-up-leave-active {
+  -webkit-animation-name: fadeOutUp;
+  animation-name: fadeOutUp;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  position: absolute;
+}
+
+span#root.words-up-leave-to {
+  position: absolute;
+  opacity: 0;
+}
+
+span#dot {
   display: inline-block;
-  margin: 0 10px;
+  width: 8px;
+  height: 8px;
+  background: #fff;
 }
-a {
-  color: #42b983;
+
+span#word-r:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display:  block;
+  background: #2c3e50;
+  width: 12px;
+  height: 29px;
 }
+
+span#word-r {
+  position: relative;
+}
+
 </style>
-`
