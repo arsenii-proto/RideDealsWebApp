@@ -4,95 +4,99 @@ import config from "./config"
 import test from "./test"
 
 /*eslint-disable */
-var OS = window[env.moduleName] = {
+if(! window[ env.moduleName ] ){
 
-    listenners: {},
+    var OS = window[env.moduleName] = {
 
-    off: (e, l) => OS.listenners[e] && OS.listenners[e].forEach((c, i) => c == l && (delete OS.listenners[e][i])),
-    on: (e, l) => ((!OS.listenners[e] && (OS.listenners[e] = [])), (OS.listenners[e].push(l))),
+        listenners: {},
 
-    run: (c, args) => {
+        off: (e, l) => OS.listenners[e] && OS.listenners[e].forEach((c, i) => c == l && (delete OS.listenners[e][i])),
+        on: (e, l) => ((!OS.listenners[e] && (OS.listenners[e] = [])), (OS.listenners[e].push(l))),
 
-        var jsArgs = OS.getArgs( args )
+        run: (c, args) => {
 
-        switch (c) {
+            var jsArgs = OS.getArgs(args)
 
-            case 'toast.show':      toast.show( jsArgs ); break;
-            case 'toast.show':      toast.show( jsArgs ); break;
+            switch (c) {
 
-            case 'config.get':      return config.get( jsArgs ); break;
-            
-        
-            default:
-                break;
+                case 'toast.show': toast.show(jsArgs); break;
+                case 'toast.show': toast.show(jsArgs); break;
+
+                case 'config.get': return config.get(jsArgs); break;
+
+
+                default:
+                    break;
+            }
+
+        },
+
+        dispatch: (e, args) => {
+
+            OS.listenners[e] && OS.listenners[e].forEach(l => l(e, OS.getArgs(args)))
+        },
+
+        receive: (e, args) => {
+
+        },
+
+        commandsList: () => {
+
+            return JSON.stringify([
+
+                'toast.show',
+                'toast.showLong',
+                'config.get',
+
+            ])
+
+        },
+
+        getArgs: (v) => {
+
+            var vr = {};
+
+            v.split('&&').forEach(v1 => {
+
+                var vs = v1.split('='),
+                    vs1 = vs[0].split(':'),
+                    namespace = vs1[0],
+                    type = vs1[1],
+                    value = vs[1],
+                    vals = namespace.split('.'),
+                    curr = vr;
+
+                vals.forEach((v2, i) => {
+
+                    if (!curr[v2]) {
+
+                        curr[v2] = {}
+                    }
+
+                    if (i == vals.length - 1) {
+
+                        switch (type) {
+
+                            case 'string': curr[v2] = "" + value; break;
+                            case 'number': curr[v2] = +value; break;
+                            case 'array': curr[v2] = JSON.parse(value); break;
+                            case 'object': curr[v2] = JSON.parse(value); break;
+                            case 'boolean': curr[v2] = (value == "true"); break;
+
+                            default: curr[v2] = value;
+                        }
+                    }
+
+                    curr = curr[v2]
+                })
+            })
+
+            return vr
         }
 
-    },
-
-    dispatch: (e, args) => {
-
-        OS.listenners[e] && OS.listenners[e].forEach(l => l(e, OS.getArgs(args)))
-    },
-
-    receive: (e, args) => {
-
-    },
-
-    commandsList: () => {
-
-        return JSON.stringify([
-
-            'toast.show',
-            'toast.showLong',
-            'config.get',
-
-        ])
-
-    },
-
-    getArgs: (v) => {
-
-        var vr = {};
-
-        v.split('&&').forEach( v1 => {
-
-            var vs          = v1.split('='),
-                vs1         = vs[0].split(':'),
-                namespace   = vs1[0],
-                type        = vs1[1],
-                value       = vs[1],
-                vals        = namespace.split('.'),
-                curr        = vr;                
-  
-            vals.forEach( (v2, i) => {
-
-                if(! curr[ v2 ] ){
-                    
-                    curr[ v2 ] = {}
-                }
-                
-                if( i == vals.length - 1 ){
-                    
-                    switch( type ){
-
-                        case 'string':  curr[ v2 ] = "" + value; break;
-                        case 'number':  curr[ v2 ] = +value; break;
-                        case 'array':   curr[ v2 ] = JSON.parse( value ); break;
-                        case 'object':  curr[ v2 ] = JSON.parse( value ); break;
-                        case 'boolean': curr[ v2 ] = (value == "true"); break;
-
-                        default: curr[ v2 ] = value;
-                    }
-                }
-
-                curr = curr[ v2 ]
-            })
-        })
-
-        return vr
     }
 
+
+    test.init(OS)
+
 }
-
-
-test.init(OS)

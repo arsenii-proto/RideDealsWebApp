@@ -17,5 +17,16 @@ export default {
 
         }
 
+        if ( a.name == 'user_id' ) {
+
+            return JSON.stringify({
+                user_id: null //f4XNcIZD2xKLzmQ5Whsw
+            })
+        }
+
+        if ( a.name == 'language' ) {
+
+            return JSON.stringify({ language: 'ro' });
+        }
     }
 }
