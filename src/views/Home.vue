@@ -15,7 +15,8 @@ export default {
   name: 'Home',
   created: function() {    
     
-    var user_id = this.$OS.config.get({ name: 'user_id' })
+    // var user_id = this.$OS.config.get({ name: 'user_id' })
+    var user_id = null
 
     if( user_id && user_id.user_id && (user_id = user_id.user_id) != null ) {
 

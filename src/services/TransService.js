@@ -17,7 +17,7 @@ export default {
   install: function(Vue) {
     if (Vue.$OS) {
       var lang = "ro";
-      var confLang = Vue.$OS.config.get("language");
+      var confLang = Vue.$OS.config.get({ name: "language" });
 
       if (confLang.language) {
         lang = confLang.language;
