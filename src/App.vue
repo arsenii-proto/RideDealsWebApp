@@ -17,30 +17,23 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 
 @import url('https://fonts.googleapis.com/css?family=Righteous|Magra:700|Montserrat|PT+Sans|Poppins|Source+Sans+Pro|Titillium+Web|Roboto:400,500,700,400italic|Material+Icons');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 @import url('./assets/animate.css');
 
-@import "~vue-material/dist/theme/engine"; // Import the theme engine
 
-@include md-register-theme("default", (
-  primary: md-get-palette-color(rgb(0, 102, 102), A200), // The primary color of your application
-  accent: md-get-palette-color(red, A200) // The accent or secondary color
-));
-
-@import "~vue-material/dist/theme/all"; // Apply the theme
 
 body {
   font-family: 'PT Sans', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #ffffff;
-  // background: -webkit-linear-gradient(left top, #666666 0%, #333333 51%, #0d0d0d 85%);
-  // background: -o-linear-gradient(bottom right, #666666 0%, #333333 51%, #0d0d0d 85%);
-  // background: -moz-linear-gradient(bottom right, #666666 0%, #333333 51%, #0d0d0d 85%);
-  // background: linear-gradient(to bottom right, #666666 0%, #333333 51%, #0d0d0d 85%);
+  /* background: -webkit-linear-gradient(left top, #666666 0%, #333333 51%, #0d0d0d 85%); */
+  /* background: -o-linear-gradient(bottom right, #666666 0%, #333333 51%, #0d0d0d 85%); */
+  /* background: -moz-linear-gradient(bottom right, #666666 0%, #333333 51%, #0d0d0d 85%); */
+  /* background: linear-gradient(to bottom right, #666666 0%, #333333 51%, #0d0d0d 85%); */
   background: #333333;
   background-attachment: fixed;
   margin: 0;
